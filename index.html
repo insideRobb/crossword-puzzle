@@ -9,8 +9,8 @@ var CW = {
 	output: []
 }
 // add a word and its properties, as object, to the crossword puzzle
-CW.add = function(i_word, i_definition, i_trial, i_across, i_row, i_column, i_position) {
-	this.components.push({word: i_word, definition: i_definition, trial: i_trial, across: i_across, row: i_row, column: i_column, position: i_position});
+CW.add = function(i_word, i_definition, i_across, i_row, i_column, i_position) {
+	this.components.push({word: i_word, definition: i_definition, across: i_across, row: i_row, column: i_column, position: i_position});
 }
 // generate output
 CW.layout = function() {
