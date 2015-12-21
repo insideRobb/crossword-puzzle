@@ -25,8 +25,8 @@ CW.layout = function() {
 		return 0; // same position, no sorting
 	});
 	// create WC puzzle filled with NxN black squares
-	for(i = 0, result = [], temp = []; i < this.size; i++, temp = []) {
-		for(j = 0; j < this.size; j++) {
+	for(var i = 0, result = [], temp = []; i < this.size; i++, temp = []) {
+		for(var j = 0; j < this.size; j++) {
 			temp.push([this.black]);
 		}
 		result.push(temp);
