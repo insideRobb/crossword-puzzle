@@ -21,8 +21,9 @@ CW.layout = function() {
 		}
 		result.push(temp);
 	}
+	var l_components = this.components.length;
 	// i cycles every word and its attributes
-	for(i = 0; i < this.components.length; i++) {
+	for(i = 0; i < l_components; i++) {
 		// new var to access quickly
 		var currentword = this.components[i];
 		// add word position in the layout
@@ -33,10 +34,10 @@ CW.layout = function() {
 			if((currentword["across"] == 0)&&(result[currentword["row"]][currentword["column"] + j] == this.black)) {
 				result[currentword["row"]][currentword["column"] + j] = [this.blank];
 			}
-			// work vertically, check if current square is black
+			// work vertically
 			else if((currentword["across"] == 1)&&(result[currentword["row"] + j][currentword["column"]] == this.black)) {				
 				// replace only if current square is a black square
-			 	result[currentword["row"] + j][currentword["column"]] = [this.blank];
+			 		result[currentword["row"] + j][currentword["column"]] = [this.blank];
 			}
 		}
 	}
