@@ -16,14 +16,14 @@ CW.add = function(i_word, i_definition, i_trial, i_across, i_row, i_column, i_po
 CW.layout = function() {
 	// bubblesorting components, first across, then bottom words
 	this.components.sort(function(a, b) {
-	if(a.across < b.across) {
-		return -1;
-	}
-	else if(a.across > b.across) {
-		return 1;
-	}
-	return 0; // same position, no sorting
-});
+		if(a.across < b.across) {
+			return -1;
+		}
+		else if(a.across > b.across) {
+			return 1;
+		}
+		return 0; // same position, no sorting
+	});
 	// create WC puzzle filled with NxN black squares
 	for(i = 0, result = [], temp = []; i < this.size; i++, temp = []) {
 		for(j = 0; j < this.size; j++) {
@@ -67,26 +67,26 @@ CW.layout = function() {
 	}
 }
 
-CW.add("Den", "Family room", "trial", 1, 0, 0, 1);
-CW.add("Drink", "Milk or orange juice", "trial", 0, 0, 0, 1);
-CW.add("India", "South Asian country", "trial", 1, 0, 2, 2);
-CW.add("Knot", "Massage target", "trial", 1, 0, 4, 3);
-CW.add("Cut", "Slice", "trial", 1, 0, 6, 4);
-CW.add("Bathe", "Scrub in the tub", "trial", 1, 0, 8, 5);
-CW.add("Cob", "Corn on the ___", "trial", 0, 0, 6, 4);
-CW.add("Nod", "Affirmative head movement", "trial", 0, 2, 0, 6);
-CW.add("Octet", "Quartet doubled", "trial", 0, 2, 4, 7);
-CW.add("Crane", "Machine for lifting heavy objects", "trial", 1, 4, 0, 8);
-CW.add("Chat", "Chew the fat", "trial", 0, 4, 0, 8);
-CW.add("Shoe", "Loafer or sneaker", "trial", 0, 4, 5, 9);
-CW.add("Herds", "Elephant groups", "trial", 1, 4, 6, "A");
-CW.add("Stew", "Cook by boiling slowly", "trial", 1, 5, 4, "B");
-CW.add("About", "Approximately", "trial", 0, 6, 0, "C");
-CW.add("Oil", "Lubricate", "trial", 1, 6, 2, "D");
-CW.add("Rye", "A grain", "trial", 0, 6, 6, "E");
-CW.add("Eye", "Stare at", "trial", 1, 6, 8, "F");
-CW.add("Eel", "Snake-like fish", "trial", 0, 8, 0, "G");
-CW.add("Waste", "Refuse", "trial", 0, 8, 4, "H");
+CW.add("Den", "Family room", 1, 0, 0, 1);
+CW.add("Drink", "Milk or orange juice", 0, 0, 0, 1);
+CW.add("India", "South Asian country", 1, 0, 2, 2);
+CW.add("Knot", "Massage target", 1, 0, 4, 3);
+CW.add("Cut", "Slice", 1, 0, 6, 4);
+CW.add("Bathe", "Scrub in the tub", 1, 0, 8, 5);
+CW.add("Cob", "Corn on the ___", 0, 0, 6, 4);
+CW.add("Nod", "Affirmative head movement", 0, 2, 0, 6);
+CW.add("Octet", "Quartet doubled", 0, 2, 4, 7);
+CW.add("Crane", "Machine for lifting heavy objects", 1, 4, 0, 8);
+CW.add("Chat", "Chew the fat", 0, 4, 0, 8);
+CW.add("Shoe", "Loafer or sneaker", 0, 4, 5, 9);
+CW.add("Herds", "Elephant groups", 1, 4, 6, "A");
+CW.add("Stew", "Cook by boiling slowly", 1, 5, 4, "B");
+CW.add("About", "Approximately", 0, 6, 0, "C");
+CW.add("Oil", "Lubricate", 1, 6, 2, "D");
+CW.add("Rye", "A grain", 0, 6, 6, "E");
+CW.add("Eye", "Stare at", 1, 6, 8, "F");
+CW.add("Eel", "Snake-like fish", 0, 8, 0, "G");
+CW.add("Waste", "Refuse", 0, 8, 4, "H");
 CW.layout();
 
 // framework per rendere automatiche le soluzioni a cruciverba con proprietà/array e metodi
