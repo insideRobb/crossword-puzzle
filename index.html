@@ -1,0 +1,96 @@
+<!DOCTYPE><html><head><title>Test</title></head><body><script>
+
+// initialize crossword puzzle
+var CW = {
+	size: 9,
+	blank: ".", // standard char for blank fields
+	black: "#", // standard char for black fields
+	components: [],
+	output: []
+}
+// add a word and its properties, as object, to the crossword puzzle
+CW.add = function(i_word, i_definition, i_trial, i_across, i_row, i_column, i_position) {
+	this.components.push({word: i_word, definition: i_definition, trial: i_trial, across: i_across, row: i_row, column: i_column, position: i_position});
+}
+// generate output
+CW.layout = function() {
+	// bubblesorting components, first across, then bottom words
+	this.components.sort(function(a, b) {
+	if(a.across < b.across) {
+		return -1;
+	}
+	else {
+		return 1;
+	}
+	return 0; // same position, no sorting
+});
+	// create WC puzzle filled with NxN black squares
+	for(i = 0, result = [], temp = []; i < this.size; i++, temp = []) {
+		for(j = 0; j < this.size; j++) {
+			temp.push([this.black]);
+		}
+		result.push(temp);
+	}
+	// i cycles every word and its attributes
+	for(i = 0; i < this.components.length; i++) {
+		// add word position in the layout
+		result[this.components[i]["row"]][this.components[i]["column"]][0] = this.components[i]["position"];
+		// add as many points as word length, starting from 1 since we already filled 1 square with word position 
+		for(j = 1; j < this.components[i]["word"].length; j++) {
+			// work horizontally
+			if(this.components[i]["across"] == 0) {
+				result[this.components[i]["row"]][this.components[i]["column"] + j] = [this.blank];
+			}
+			// work vertically
+			else {				
+				// replace only if current square is a black square
+				if(result[this.components[i]["row"] + j][this.components[i]["column"]] == this.black) {
+			 		result[this.components[i]["row"] + j][this.components[i]["column"]] = [this.blank];
+			 	}
+			}
+		}
+	}
+	// merge single blocks into rows
+	for(i = 0; i < result.length; i++) {
+		result[i] = [].concat.apply([], result[i]);
+	}
+	// pass result to the element
+	this.output = result;
+	for(i = 0; i < this.output.length; i++) {
+		for(j = 0; j < this.output[i].length; j++) {
+			document.write(this.output[i][j]);
+		}
+		document.write("<br>");
+	}
+}
+
+CW.add("Den", "Family room", "trial", 1, 0, 0, 1);
+CW.add("Drink", "Milk or orange juice", "trial", 0, 0, 0, 1);
+CW.add("India", "South Asian country", "trial", 1, 0, 2, 2);
+CW.add("Knot", "Massage target", "trial", 1, 0, 4, 3);
+CW.add("Cut", "Slice", "trial", 1, 0, 6, 4);
+CW.add("Bathe", "Scrub in the tub", "trial", 1, 0, 8, 5);
+CW.add("Cob", "Corn on the ___", "trial", 0, 0, 6, 4);
+CW.add("Nod", "Affirmative head movement", "trial", 0, 2, 0, 6);
+CW.add("Octet", "Quartet doubled", "trial", 0, 2, 4, 7);
+CW.add("Crane", "Machine for lifting heavy objects", "trial", 1, 4, 0, 8);
+CW.add("Chat", "Chew the fat", "trial", 0, 4, 0, 8);
+CW.add("Shoe", "Loafer or sneaker", "trial", 0, 4, 5, 9);
+CW.add("Herds", "Elephant groups", "trial", 1, 4, 6, "A");
+CW.add("Stew", "Cook by boiling slowly", "trial", 1, 5, 4, "B");
+CW.add("About", "Approximately", "trial", 0, 6, 0, "C");
+CW.add("Oil", "Lubricate", "trial", 1, 6, 2, "D");
+CW.add("Rye", "A grain", "trial", 0, 6, 6, "E");
+CW.add("Eye", "Stare at", "trial", 1, 6, 8, "F");
+CW.add("Eel", "Snake-like fish", "trial", 0, 8, 0, "G");
+CW.add("Waste", "Refuse", "trial", 0, 8, 4, "H");
+CW.layout();
+
+// framework per rendere automatiche le soluzioni a cruciverba con proprietà/array e metodi
+// - spiegare tutti i metodi (di accesso) alle strutture di dati con commenti
+// - spiegare il programma in termini di velocità, spazio e le procedure per manipolare i dati
+
+// -- elementi componenti: posizione nella griglia
+// - aggiungere attributi/limiti trial words(?) e parti della parola
+
+</script></body></html>
