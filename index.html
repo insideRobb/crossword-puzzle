@@ -33,10 +33,10 @@ CW.layout = function() {
 			if((currentword["across"] == 0)&&(result[currentword["row"]][currentword["column"] + j] == this.black)) {
 				result[currentword["row"]][currentword["column"] + j] = [this.blank];
 			}
-			// work vertically
+			// work vertically, check if current square is black
 			else if((currentword["across"] == 1)&&(result[currentword["row"] + j][currentword["column"]] == this.black)) {				
 				// replace only if current square is a black square
-			 		result[currentword["row"] + j][currentword["column"]] = [this.blank];
+			 	result[currentword["row"] + j][currentword["column"]] = [this.blank];
 			}
 		}
 	}
