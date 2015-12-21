@@ -33,7 +33,7 @@ CW.layout = function() {
 	}
 	// i cycles every word and its attributes
 	for(i = 0; i < this.components.length; i++) {
-		// create simple var to use less memory than using objects properties every time
+		// new var to access quickly
 		var currentword = this.components[i];
 		// add word position in the layout
 		result[currentword["row"]][currentword["column"]][0] = currentword["position"];
