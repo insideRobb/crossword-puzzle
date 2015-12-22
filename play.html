@@ -20,11 +20,11 @@
 		</header>
 		<main>
 			<div class="well">
+				<h3>Here is your Crossword puzzle:</h3>
 				<div class="alert alert-warning" role="alert" style="display: none">This word doesn't fit.</div>
 				<form id="play">
 					<div class="row">
-						<div class="col-md-4"><input type="text" class="form-control" name="trial" placeholder="Write this word..." onfocus="typefocusout()" required></div>
-						<div class="col-md-4"><input type="text" class="form-control" name="symbol" placeholder="Symbol (A-Z0-9)" pattern="[A-Z0-9]" required></div>
+						<div class="col-md-4"><input type="text" class="form-control" name="symbol" placeholder="Symbol (A-Z0-9)" pattern="[A-Za-z0-9]" required onfocusout="unlock()"></div>
 						<div class="col-md-4">
 							<select name="type" class="form-control" onfocusout="typefocusout()" required>
 								<option disabled>Type:</option>
@@ -32,12 +32,25 @@
 								<option value="1">Down</option>
 							</select>
 						</div>
+						<div class="col-md-4"><input type="text" class="form-control" name="trial" placeholder="This word... (enter symbol and A/D before)" onfocus="typefocusout()" required disabled></div>
 					</div>
 					<div class="row">
-						<div class="col-md-6"><button type="button" class="btn btn-primary btn-block" onclick="restore()">Get suggestion</button></div>
-						<div class="col-md-6"><button type="button" class="btn btn-success btn-block" onclick="play()">Add word to the puzzle</button></div>
+						<div class="col-md-6"><button type="button" class="btn btn-warning btn-block" onclick="location.reload()">Restart</button></div>
+						<div class="col-md-6"><input type="submit" class="btn btn-success btn-block" value="Add word to the puzzle" onclick="play()"></button></div>
 					</div>
 				</form>
+				<hr>
+				<div class="row">
+					<div class="col-sm-6"><strong>Across</strong></div>
+					<div class="col-sm-6"><strong>Down</strong></div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<ul class="list-unstyled" id="across"></ul>
+					</div>
+					<div class="col-sm-6">
+						<ul class="list-unstyled" id="down"></ul>
+					</div>
 			</div>
 		</main>
 	</body>
