@@ -7,7 +7,17 @@ var CW = {
 }
 // add a word and its properties, as object, to the crossword puzzle
 CW.add = function(i_word, i_definition, i_across, i_row, i_column, i_position) {
-	this.components.push({word: i_word, definition: i_definition, across: i_across, row: i_row, column: i_column, position: i_position});
+	this.components.push({word: i_word.toLowerCase(), definition: i_definition, across: i_across, row: i_row, column: i_column, position: i_position});
+}
+// delete one word from components
+CW.remove = function(x) {
+	var components = this.components;
+	var components_l = this.components.length;
+	for(var i = 0; i < components_l; i++) {
+		if(components[i]["word"] == x) {
+			this.components.splice(i);
+		}
+	}
 }
 // delete all words added
 CW.restore = function() {
@@ -21,25 +31,54 @@ CW.layout = function() {
 			temp.push([this.black]);
 		}
 		result.push(temp);
-	}
+	}	
 	var l_components = this.components.length;
 	// i cycles every word and its attributes
 	for(i = 0; i < l_components; i++) {
-		// new var to access quickly
 		var currentword = this.components[i];
-		// add word position in the layout
-		result[currentword["row"]][currentword["column"]][0] = currentword["position"];
-		// add as many points as word length, starting from 1 since we already filled 1 square with word position 
-		for(j = 1; j < currentword["word"].length; j++) {
-			// work horizontally, check if current square is black
-			if((currentword["across"] == 0)&&(result[currentword["row"]][currentword["column"] + j] == this.black)) {
-				result[currentword["row"]][currentword["column"] + j] = [this.blank];
+		// check if current square is black or has same letter, fill with proper letter
+		for(j = 0; j < currentword["word"].length; j++) {
+			// work horizontally
+			if((currentword["across"] == 0)&&((result[currentword["row"]][currentword["column"] + j] == this.black)||(result[currentword["row"]][currentword["column"] + j] == currentword["word"][j]))) {
+				result[currentword["row"]][currentword["column"] + j] = currentword["word"][j];
 			}
 			// work vertically
-			else if((currentword["across"] == 1)&&(result[currentword["row"] + j][currentword["column"]] == this.black)) {				
-				// replace only if current square is a black square
-			 		result[currentword["row"] + j][currentword["column"]] = [this.blank];
+			else if((currentword["across"] == 1)&&((result[currentword["row"] + j][currentword["column"]] == this.black)||(result[currentword["row"] + j][currentword["column"]] == currentword["word"][j]))) {				
+			 	result[currentword["row"] + j][currentword["column"]] = currentword["word"][j];
 			}
+			// if error
+			else {
+				return currentword["word"];
+			}
+		}
+	}
+	// now replace letters with index or dots
+	for(i = 0; i < l_components; i++) {
+		currentword = this.components[i];
+		// add dots
+		for(j = 0; j < currentword["word"].length; j++) {
+			// work horizontally
+			if(currentword["across"] == 0) {
+				var current_xy = result[currentword["row"]][currentword["column"] + j];
+				if ((typeof current_xy === "string")&&(current_xy == current_xy.toLowerCase())) {
+					result[currentword["row"]][currentword["column"] + j] = this.blank;
+				}
+			}
+			// work vertically
+			else if(currentword["across"] == 1) {
+				var current_xy = result[currentword["row"] + j][currentword["column"]];		
+				if ((typeof current_xy === "string")&&(current_xy == current_xy.toLowerCase())) {
+			 		result[currentword["row"] + j][currentword["column"]] = this.blank;
+			 	}
+			}
+		}
+		// add word position in the layout (multiple words starts in one box supported)
+		current_xy = result[currentword["row"]][currentword["column"]];
+		if(((typeof current_xy == "string")&&(current_xy == current_xy.toUpperCase())&&(current_xy != this.blank))||((typeof current_xy == "number")&&(current_xy != currentword["position"]))) {
+			result[currentword["row"]][currentword["column"]]+= "|" + currentword["position"];
+		}
+		else {
+			result[currentword["row"]][currentword["column"]] = currentword["position"];
 		}
 	}
 	// merge single blocks into rows
