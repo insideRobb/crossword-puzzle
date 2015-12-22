@@ -1,0 +1,10 @@
+html, body {margin: 0}
+h1, h2, h3, h4, h5, h6 {margin-top: 0 !important}
+body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif}
+header {width: 100%; margin: 0 20px 15px 0; padding: 16px 45px; background-color: #1da1f2; -webkit-font-smoothing: antialiased; color: #fff; font-weight: 400; font-size: 16px}
+main {width: 80%; min-width: 940px; margin: 0 auto}
+.word {display: none}
+.word input {margin-bottom: 10px}
+.radio {display: inline-block}
+.radio:first-of-type {margin-top: 0}
+.table {text-align: center; font-weight: bold}
