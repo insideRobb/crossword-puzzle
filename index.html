@@ -1,83 +1,79 @@
-<!DOCTYPE><html><head><title>Test</title></head><body><script>
-
-// initialize crossword puzzle
-var CW = {
-	size: 9,
-	blank: ".", // standard char for blank fields
-	black: "#", // standard char for black fields
-	components: [],
-	output: []
-}
-// add a word and its properties, as object, to the crossword puzzle
-CW.add = function(i_word, i_definition, i_across, i_row, i_column, i_position) {
-	this.components.push({word: i_word, definition: i_definition, across: i_across, row: i_row, column: i_column, position: i_position});
-}
-// generate output
-CW.layout = function() {
-	// create WC puzzle filled with NxN black squares
-	for(var i = 0, result = [], temp = []; i < this.size; i++, temp = []) {
-		for(var j = 0; j < this.size; j++) {
-			temp.push([this.black]);
-		}
-		result.push(temp);
-	}
-	var l_components = this.components.length;
-	// i cycles every word and its attributes
-	for(i = 0; i < l_components; i++) {
-		// new var to access quickly
-		var currentword = this.components[i];
-		// add word position in the layout
-		result[currentword["row"]][currentword["column"]][0] = currentword["position"];
-		// add as many points as word length, starting from 1 since we already filled 1 square with word position 
-		for(j = 1; j < currentword["word"].length; j++) {
-			// work horizontally, check if current square is black
-			if((currentword["across"] == 0)&&(result[currentword["row"]][currentword["column"] + j] == this.black)) {
-				result[currentword["row"]][currentword["column"] + j] = [this.blank];
-			}
-			// work vertically
-			else if((currentword["across"] == 1)&&(result[currentword["row"] + j][currentword["column"]] == this.black)) {				
-				// replace only if current square is a black square
-			 		result[currentword["row"] + j][currentword["column"]] = [this.blank];
-			}
-		}
-	}
-	// merge single blocks into rows
-	for(i = 0; i < result.length; i++) {
-		result[i] = [].concat.apply([], result[i]);
-	}
-	// pass result to the element
-	this.output = result;
-	for(i = 0; i < this.output.length; i++) {
-		for(j = 0; j < this.output[i].length; j++) {
-			document.write(this.output[i][j]);
-		}
-		document.write("<br>");
-	}
-}
-
-CW.add("Den", "Family room", 1, 0, 0, 1);
-CW.add("Drink", "Milk or orange juice", 0, 0, 0, 1);
-CW.add("India", "South Asian country", 1, 0, 2, 2);
-CW.add("Knot", "Massage target", 1, 0, 4, 3);
-CW.add("Cut", "Slice", 1, 0, 6, 4);
-CW.add("Bathe", "Scrub in the tub", 1, 0, 8, 5);
-CW.add("Cob", "Corn on the ___", 0, 0, 6, 4);
-CW.add("Nod", "Affirmative head movement", 0, 2, 0, 6);
-CW.add("Octet", "Quartet doubled", 0, 2, 4, 7);
-CW.add("Crane", "Machine for lifting heavy objects", 1, 4, 0, 8);
-CW.add("Chat", "Chew the fat", 0, 4, 0, 8);
-CW.add("Shoe", "Loafer or sneaker", 0, 4, 5, 9);
-CW.add("Herds", "Elephant groups", 1, 4, 6, "A");
-CW.add("Stew", "Cook by boiling slowly", 1, 5, 4, "B");
-CW.add("About", "Approximately", 0, 6, 0, "C");
-CW.add("Oil", "Lubricate", 1, 6, 2, "D");
-CW.add("Rye", "A grain", 0, 6, 6, "E");
-CW.add("Eye", "Stare at", 1, 6, 8, "F");
-CW.add("Eel", "Snake-like fish", 0, 8, 0, "G");
-CW.add("Waste", "Refuse", 0, 8, 4, "H");
-CW.layout();
-
-// - spiegare tutti i metodi (di accesso) alle strutture di dati con commenti
-// - spiegare il programma in termini di velocità, spazio e le procedure per manipolare i dati
-
-</script></body></html>
+<!DOCTYPE>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Crossword Puzzle Layout Generator</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="cw-puzzle.js"></script>
+		<script src="generate.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header>
+			<span class="glyphicon glyphicon-th" aria-hidden="true"></span> Crossword Puzzle Layout Generator by Robb
+		</header>
+		<main>
+			<div class="well">
+				<h3>Generator</h3>
+				<div class="alert alert-success" role="alert" style="display: none"><span>0</span> word(s) added</div>
+				<form class="form-inline" onsubmit="setsize()">
+					<div class="input-group">
+  						<span class="input-group-addon">for</span>
+						<input type="text" class="form-control" placeholder="NxN" value="9x9" name="size" pattern="[0-9]+x[0-9]+" minlegth="3" required>
+						<span class="input-group-addon">Crossword Puzzle</span>
+					</div>
+					<input type="submit" id="start" class="btn btn-info" value="Start!">
+				</form>
+				<form class="word" onsubmit="addto()">
+					<div class="row">
+						<div class="col-md-6"><input type="text" class="form-control" name="trial" placeholder="Trial word" required></div>
+						<div class="col-md-6"><input type="text" class="form-control" name="definition" placeholder="Definition" required></div>
+					</div>
+					<div class="row">
+						<div class="col-md-3"><input type="text" class="form-control" name="horizontal" placeholder="Horizontal start (from 1)" pattern="[1-9][0-9]*" required></div>
+						<div class="col-md-3"><input type="text" class="form-control" name="vertical" placeholder="Vertical start (from 1)" pattern="[1-9][0-9]*" required></div>
+						<div class="col-md-2">
+							<select name="type" class="form-control" onfocusout="typefocusout()" required>
+								<option disabled>Type:</option>
+								<option value="0">Across</option>
+								<option value="1">Down</option>
+							</select>
+						</div>
+						<div class="col-md-2"><input type="text" class="form-control" name="symbol" placeholder="Symbol (A-Z0-9)" pattern="[A-Z0-9]" required></div>
+						<div class="col-md-2"><input type="submit" class="btn btn-primary btn-block" value="Add"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-6"><button type="button" class="btn btn-danger btn-block" onclick="restore()">Delete words</button></div>
+						<div class="col-md-6"><button type="button" class="btn btn-success btn-block" onclick="generate()">Generate</button></div>
+					</div>
+				</form>
+				<hr>
+			</div>
+		</main>
+		<script>
+			// sample data given by Alolita
+			CW.add("Den", "Family room", 1, 0, 0, 1);
+			CW.add("Drink", "Milk or orange juice", 0, 0, 0, 1);
+			CW.add("India", "South Asian country", 1, 0, 2, 2);
+			CW.add("Knot", "Massage target", 1, 0, 4, 3);
+			CW.add("Cut", "Slice", 1, 0, 6, 4);
+			CW.add("Bathe", "Scrub in the tub", 1, 0, 8, 5);
+			CW.add("Cob", "Corn on the ___", 0, 0, 6, 4);
+			CW.add("Nod", "Affirmative head movement", 0, 2, 0, 6);
+			CW.add("Octet", "Quartet doubled", 0, 2, 4, 7);
+			CW.add("Crane", "Machine for lifting heavy objects", 1, 4, 0, 8);
+			CW.add("Chat", "Chew the fat", 0, 4, 0, 8);
+			CW.add("Shoe", "Loafer or sneaker", 0, 4, 5, 9);
+			CW.add("Herds", "Elephant groups", 1, 4, 6, "A");
+			CW.add("Stew", "Cook by boiling slowly", 1, 5, 4, "B");
+			CW.add("About", "Approximately", 0, 6, 0, "C");
+			CW.add("Oil", "Lubricate", 1, 6, 2, "D");
+			CW.add("Rye", "A grain", 0, 6, 6, "E");
+			CW.add("Eye", "Stare at", 1, 6, 8, "F");
+			CW.add("Eel", "Snake-like fish", 0, 8, 0, "G");
+			CW.add("Waste", "Refuse", 0, 8, 4, "H");
+		</script>
+	</body>
+</html>
