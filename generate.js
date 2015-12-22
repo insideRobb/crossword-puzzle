@@ -1,3 +1,4 @@
+// add word to the puzzle in the entered position
 function play() {
 	$(".alert-warning").hide();
 	var crossdown = $("select[name='type']").find(":selected").attr("value");
@@ -8,14 +9,13 @@ function play() {
 	for(var i = 0; i < word_l; i++) {
 		if(current.text() == localStorage["black"]) {
 			$(".alert-warning").toggle("fast");
-			current.parent().html(current_html)
+			current.parent().html(current_html);
+			// stop cycle if user is trying to write in a black square
 			i = word_l;
 		}
-		else if(current.text() == localStorage["blank"]) {
-			current.text(word[i].toLowerCase());
-		}
+		// add letter in a box if is blank 
 		else {
-			current.text(" " + word[i].toLowerCase());
+			current.text(word[i].toLowerCase());
 		}
 		// get next element based on across/down property
 		if(crossdown == 0) {
@@ -28,7 +28,7 @@ function play() {
 	event.preventDefault();
 }
 
-// get input sizes and replace big text
+// get input sizes, save data and replace big text
 function setsize() {
 	var sizes = $(".well input[name='size']").val().split("x");
 	// add properties to object and store for future play
@@ -89,6 +89,7 @@ var layout = CW.layout();
 				cwdata.push({across: CW.components[i]["across"], position: CW.components[i]["position"], definition: CW.components[i]["definition"], length: CW.components[i]["word"].length, column: CW.components[i]["column"], row: CW.components[i]["row"]});
 			}
 			var output_l = CW.output.length;
+			// start building HTML
 			var table = '<table class="table table-bordered">';
 			for(i = 0; i < output_l; i++) {
 				// create rows
@@ -97,6 +98,7 @@ var layout = CW.layout();
 				for(var j = 0; j < outputi_l; j++) {
 					// add boxes to rows
 					table+= "<td";
+					// add ID to the box if it represents some word start
 					if((CW.output[i][j] != CW.blank)&&(CW.output[i][j] != CW.black)) {
 						table+=" id='" + CW.output[i][j] + "'";
 					}
@@ -108,6 +110,7 @@ var layout = CW.layout();
 			// save output data and layout without need to reprocess when playing
 			localStorage["output"] = table;
 			localStorage["data"] = JSON.stringify(cwdata);
+			// redirect to start playing
 			location.href = "play.html";
 		}
 		else {
@@ -124,7 +127,7 @@ var layout = CW.layout();
 	}
 }
 
-// get saved data in order to play
+// get saved data in order to play the crossword puzzle
 function retrieve() {
 	$(".alert").after(localStorage["output"]);
 	var data = JSON.parse(localStorage["data"]);
