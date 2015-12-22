@@ -1,21 +1,47 @@
+function play() {
+	var currenthtml = $(".table tr#0").html();
+	var word = $("input[name='trial']").val();
+	var word_l = word.length;
+	$(".alert-warning").hide();
+	for(var i = 0; i < word_l; i++) {
+		if($(".table tr#0 td." + i).text() == localStorage["black"]) {
+			$(".alert-warning").toggle("fast");
+			i = word_l;
+		}
+		else if($(".table tr#0 td." + i).text() == localStorage["blank"]) {
+			$(".table tr#0 td." + i).text(word[i]);
+		}
+		else {
+			// $(".table tr#0 td." + i).attr("data-name", "
+			$(".table tr#0 td." + i).text(" " + word[i]);
+		}
+		
+	}
+}
+
 // get input sizes and replace big text
 function setsize() {
 	var sizes = $(".well input[name='size']").val().split("x");
+	// add properties to object and store for future play
 	CW.sizex = sizes[0];
 	CW.sizey = sizes[1];
+	localStorage["sizex"] = sizes[0];
+	localStorage["sizey"] = sizes[1];
+	localStorage["black"] = CW.black;
+	localStorage["blank"] = CW.blank;
 	$(".well > h3").text("Generator for " + CW.sizex + "x" + CW.sizey + " Crossword Puzzle")
 	$(".word").toggle("slow");
 	$(".form-inline").hide();
 	event.preventDefault();
 }
 
-// on across/down definition, set word max length (prevent to add words exceeding the layout)
+// based on across/down definition, set word max length (prevent to add words exceeding the layout)
 function typefocusout() {
-	if($(".word select").find(":selected").attr("value") == 0) {
-    	$(".word input[name='trial']").attr('maxlength', CW.sizex);
+	if($("select[name='type']").find(":selected").attr("value") == 0) {
+    	$("input[name='trial']").attr('maxlength', localStorage["sizex"]);
     }
     else {
-    	$(".word input[name='trial']").attr('maxlength', CW.sizey);
+    	$("input[name='trial']").attr('maxlength', localStorage["sizey"]);
     }
 }
 
@@ -43,21 +69,41 @@ function restore() {
 
 // get layout and print
 function generate() {
-	CW.layout();
-	var output_n = CW.output.length;
-	// create table
-	$("hr").after('<table class="table table-bordered"></table>')
-	for(i = 0; i < output_n; i++) {
-		// create rows
-		$(".table").append("<tr></tr>");
-		var outputi_n = CW.output[i].length;
-		for(j = 0; j < outputi_n; j++) {
-			// add boxes to rows
-			$(".table tr:last-child").append("<td>" + CW.output[i][j] + "</td>");
+var layout = CW.layout();
+	// if everything is fine and no overlapping
+	if(typeof layout === "undefined") {
+		var output_n = CW.output.length;
+		// create table
+		if($(".table").length <= 0) {
+			$("hr").after('<table class="table table-bordered"></table>')
 		}
+		// clear table if already exists
+		else {
+			$(".table").html("");
+		}
+		for(i = 0; i < output_n; i++) {
+			// create rows
+			$(".table").append("<tr id='" + i + "'></tr>");
+			var outputi_n = CW.output[i].length;
+			for(j = 0; j < outputi_n; j++) {
+				// add boxes to rows
+				$(".table tr:last-child").append("<td class='" + j + "'>" + CW.output[i][j] + "</td>");
+			}
+		}
+		// save output data and layout without need to reprocess when playing
+		localStorage["output"] = document.querySelector(".table").outerHTML;
+		localStorage["layout"] = JSON.stringify(CW.output);
 	}
-	// save output layout without need to reprocess when playing
-	localStorage["output"] = document.querySelector(".table").outerHTML;
-	// save output data useful when playing
-	localStorage["layout"] = JSON.stringify(CW.output);
+	// if overlapping, show alert and delete past table if exists
+	else {
+		CW.remove(layout);
+		$(".well > h3").after('<div class="alert alert-warning" role="alert">Unable to add "' + layout.toUpperCase() + '" to the puzzle due to overlapping, please fix positions (word has been deleted)</div>');
+		$(".alert-success").hide();
+		$(".table").remove();
+	}
+}
+
+// get saved data in order to play
+function retrieve() {
+	$(".well").prepend(localStorage["output"]);
 }
