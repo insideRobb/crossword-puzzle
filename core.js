@@ -56,6 +56,7 @@ CW.layout = function() {
 		// now replace letters with index or dots
 		for(i = 0; i < l_components; i++) {
 			currentword = this.components[i];
+			var currentword_l = currentword["word"].length;
 			// add dots
 			for(j = 0; j < currentword["word"].length; j++) {
 				// work horizontally
