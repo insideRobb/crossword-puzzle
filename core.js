@@ -27,7 +27,7 @@ CW.restore = function() {
 CW.layout = function() {
 	var l_components = this.components.length;
 	if(l_components > 0) {
-		// create WC puzzle filled with NxN black squares
+		// create WC puzzle filled with X x Y black squares
 		for(var i = 0, result = [], temp = []; i < this.sizex; i++, temp = []) {
 			for(var j = 0; j < this.sizey; j++) {
 				temp.push([this.black]);
@@ -61,19 +61,21 @@ CW.layout = function() {
 				// work horizontally
 				if(currentword["across"] == 0) {
 					var current_xy = result[currentword["row"]][currentword["column"] + j];
+					// replace with dot if is a letter and is not an indicator
 					if ((typeof current_xy === "string")&&(current_xy == current_xy.toLowerCase())) {
 						result[currentword["row"]][currentword["column"] + j] = this.blank;
 					}
 				}
 				// work vertically
-				else if(currentword["across"] == 1) {
-					var current_xy = result[currentword["row"] + j][currentword["column"]];		
+				else {
+					var current_xy = result[currentword["row"] + j][currentword["column"]];	
+					// replace with dot if is a letter and is not an indicator
 					if ((typeof current_xy === "string")&&(current_xy == current_xy.toLowerCase())) {
 			 			result[currentword["row"] + j][currentword["column"]] = this.blank;
 			 		}
 				}
 			}
-			// add word position in the layout (multiple words starts in one box supported)
+			// add word position in the layout
 			result[currentword["row"]][currentword["column"]] = currentword["position"];
 		}
 		// merge single blocks into rows
